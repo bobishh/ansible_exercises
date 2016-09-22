@@ -1,0 +1,4 @@
+---
+# web host variables
+ansible_ssh_host: 192.168.1.12
+username: host_user

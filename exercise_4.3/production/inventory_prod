@@ -1,0 +1,8 @@
+[webservers]
+web
+[dbservers]
+db
+
+[datacenters:children]
+webservers
+dbservers

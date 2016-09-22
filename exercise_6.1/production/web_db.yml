@@ -1,0 +1,35 @@
+---
+- name: Provision webservers
+  hosts: webservers
+  sudo: yes
+  tasks:
+    - name: Ensure that nginx is installed
+      apt: name=nginx state=present
+    - name: Start nginx services
+      service: name=nginx enabled=yes state=started
+
+- name: Provision dbservers
+  hosts: dbservers
+  sudo: yes
+  tasks:
+    - name: Ensure that postgresql is installed
+      apt: name=postgresql state=present
+    - name: Start postgresql services
+      service: name=postgresql enabled=yes state=started
+
+- name: turn off iptables if install
+  hosts: webservers:dbservers
+  sudo: yes
+  tasks:
+    - name: Check if iptables installed
+      shell: dpkg-query -l iptables
+      register: dpkg_query_results
+      notify: Iptables checked
+
+    - name: Ensure iptables is down
+      service: name=iptables state=stopped
+      when: dpkg_query_results.stdout.find('Status=Not/Inst') == -1
+
+  handlers:
+    - name: Iptables checked
+      debug: msg="Iptables is checked"
