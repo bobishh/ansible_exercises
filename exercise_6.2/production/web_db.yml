@@ -2,18 +2,49 @@
 - name: Provision webservers
   hosts: webservers
   sudo: yes
+
+  vars: 
+    http_port: 80
+    nginx_user: vagrant
+    nginx_workers_count: 4
+    doc_root: /var/www/html/ansible
+
+  vars_prompt:
+    - name: site_header
+      prompt: what's the site header?
+
   tasks:
     - name: Ensure that nginx is installed
       apt: name=nginx state=present
-    - name: Start nginx services
+      when: ansible_os_family == 'Debian'
+
+    - name: Deploy nginx basic config
+      template: src=templates/nginx.j2 dest=/etc/nginx/nginx.conf
+
+    - name: Deploy nginx site config
+      template: src=templates/default.j2 dest=/etc/nginx/sites-available/default
+      notify: 
+      - Restart nginx
+
+    - name: Ensure nginx is running
       service: name=nginx enabled=yes state=started
+
+    - name: Copy files
+      template: src=templates/index.j2 dest={{ doc_root }}/index.html
+
+  handlers:
+  - name: Restart nginx
+    service: name=nginx state=restarted
 
 - name: Provision dbservers
   hosts: dbservers
   sudo: yes
+
   tasks:
     - name: Ensure that postgresql is installed
       apt: name=postgresql state=present
+      when: ansible_os_family == 'Debian'
+
     - name: Start postgresql services
       service: name=postgresql enabled=yes state=started
 
