@@ -1,0 +1,5 @@
+---
+http_port: 80
+nginx_user: vagrant
+nginx_workers_count: 4
+doc_root: /var/www/html/ansible

@@ -1,0 +1,9 @@
+---
+- name: Provision all
+  hosts: datacenters
+  sudo: yes
+  roles:
+  - Ilyes512.nvm
+
+- include: webservers.yml
+- include: dbservers.yml

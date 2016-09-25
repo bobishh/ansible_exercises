@@ -1,0 +1,6 @@
+---
+- name: Provision db servers
+  hosts: dbservers
+  sudo: true
+  roles:
+  - db_server

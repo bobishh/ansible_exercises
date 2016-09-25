@@ -1,0 +1,5 @@
+- name: Ensure syslog installed
+  apt: name=rsyslog state=present
+
+- name: Ensure syslog running
+  service: name=rsyslog state=started

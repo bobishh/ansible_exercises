@@ -1,0 +1,3 @@
+---
+- include: snpm.yml
+- include: syslog.yml

@@ -1,0 +1,12 @@
+- name: Ensure SNMP installed
+  apt: name=snmpd state=present
+
+- name: Ensure SNMP utils installed
+  apt: name=snmp state=present
+
+- name: Deploy snmp config
+  template: src=smpnd.j2 dest=/etc/snpm/snpmd.conf
+  notify: Restart SNMP
+
+- name: Ensure SNMP server is running
+  service: name=snmpd state=started
